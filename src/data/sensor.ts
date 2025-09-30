@@ -1,3 +1,160 @@
+/**
+ * 定义传感器的通用状态
+ */
+export enum SensorStatus {
+  NORMAL = '正常',
+  WARNING = '告警',
+  ERROR = '故障',
+  OFFLINE = '离线',
+}
+
+/**
+* 定义本项目中可能包含的传感器类型
+*/
+export enum SensorType {
+  WaterLevel = '水位计',
+  Rainfall = '雨量站',
+  WeatherStation = '气象站',
+  AICamera = '积水AI摄像头',
+  SoilMoisture = '土壤湿度计',
+}
+
+/**
+ * 所有传感器的基础信息接口
+ */
+export interface BaseSensor {
+  /** 传感器的唯一ID */
+  id: string;
+
+  /** 传感器名称或位置描述，例如 "长江大桥2号桥墩" */
+  name: string;
+  
+  /** 传感器类型 */
+  type: SensorType;
+
+  /** 地理位置信息 */
+  geometry: {
+    type: "Point";
+    coordinates: [number, number];
+  };
+
+  /** 当前状态 */
+  status: SensorStatus;
+
+  /** 最后一次上报数据的时间 (ISO 8601 格式字符串) */
+  lastUpdated: string;
+
+  /** 所属或负责的部门 (可选) */
+  department?: string;
+}
+
+
+/**
+ * 水位计的特定数据点
+ */
+interface WaterLevelDataPoint {
+  timestamp: string;
+  level: number; // 水位值
+}
+
+/**
+* 水位计完整信息接口
+*/
+export interface WaterLevelSensor extends BaseSensor {
+  type: SensorType.WaterLevel;
+  
+  /** 当前实时水位 (单位: 米) [cite: 70] */
+  currentLevel: number;
+  
+  /** 警戒水位阈值 (单位: 米) [cite: 77] */
+  warningThreshold: number;
+  
+  /** 危险水位阈值 (单位: 米) [cite: 77] */
+  dangerThreshold: number;
+
+  /** 实时流量 (可选, 单位: 立方米/秒) [cite: 70, 250] */
+  flowRate?: number;
+
+  /** 历史水位数据，用于绘制趋势图 */
+  historicalData: WaterLevelDataPoint[];
+}
+
+/**
+ * 雨量站的特定数据点
+ */
+interface RainfallDataPoint {
+  timestamp: string;
+  intensity: number; // 降雨强度
+}
+
+/**
+* 雨量站完整信息接口
+*/
+export interface RainfallSensor extends BaseSensor {
+  type: SensorType.Rainfall;
+  
+  /** 当前降雨强度 (单位: 毫米/小时) [cite: 75] */
+  currentIntensity: number;
+
+  /** 过去1小时累计降雨量 (单位: 毫米) */
+  hourlyAccumulation: number;
+
+  /** 过去24小时累计降雨量 (单位: 毫米) */
+  dailyAccumulation: number;
+
+  /** 历史降雨数据，用于绘制趋势图 */
+  historicalData: RainfallDataPoint[];
+}
+
+/**
+ * 积水AI摄像头完整信息接口
+ */
+export interface AICameraSensor extends BaseSensor {
+  type: SensorType.AICamera;
+  
+  /** AI分析出的当前路面积水深度 (单位: 厘米) */
+  detectedWaterDepth: number;
+
+  /** AI识别的风险等级 ('无积水' | '轻度积水' | '严重拥堵' | '道路中断') */
+  riskLevel: '无积水' | '轻度积水' | '严重拥堵' | '道路中断';
+
+  /** 最新抓拍的图片URL地址 */
+  latestImageUrl: string;
+  
+  /** 实时视频流地址 (可选) */
+  videoStreamUrl?: string;
+}
+
+/**
+ * 综合气象站完整信息接口
+ */
+export interface WeatherStationSensor extends BaseSensor {
+  type: SensorType.WeatherStation;
+  
+  /** 温度 (单位: 摄氏度) [cite: 111] */
+  temperature: number;
+
+  /** 湿度 (单位: %) [cite: 111] */
+  humidity: number;
+
+  /** 气压 (单位: 百帕/hPa) [cite: 75, 111] */
+  pressure: number;
+  
+  /** 风速 (单位: 米/秒) [cite: 75, 111] */
+  windSpeed: number;
+
+  /** 风向 (单位: 度, 0-360) */
+  windDirection: number;
+}
+
+export type AnySensor = WaterLevelSensor | RainfallSensor | AICameraSensor | WeatherStationSensor;
+
+
+
+
+
+
+
 export interface Location {
     type: "Feature";
     geometry: {
@@ -15,7 +172,7 @@ export interface Location {
       state: string;
     };
   }
-  export const storeLocations: Location[] = [
+  export const storeAnySensors: Location[] = [
     {
       "type": "Feature",
       "geometry": {
@@ -247,7 +404,7 @@ export interface Location {
   ];
  
  
-  /*  export const storeLocations: Location[] = [
+  /*  export const storeAnySensors: AnySensor[] = [
         {
           "type": "Feature",
           "geometry": {

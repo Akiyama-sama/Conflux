@@ -2,16 +2,16 @@ import { useRef, useEffect, useState } from 'react'
 import mapboxgl from 'mapbox-gl'
 
 import 'mapbox-gl/dist/mapbox-gl.css'
-import type { Location } from '@/data/location'
+
 import Marker from '@/components/marker'
 import Sidebar from '@/feature/index/component/sidebar'
-import useLocation from '@/feature/index/store/location-store'
+import useSensor from '@/feature/index/store/sensor-store'
 import { Slider } from '@/components/ui/slider'
 import useTimeLine from './store/timeLine-store'
 function App() {
   const mapRef = useRef<mapboxgl.Map | null>(null)
   const mapContainerRef = useRef<HTMLDivElement>(null)
-  const { locations, selectedLocation, setSelectedLocation } = useLocation()
+  const { sensors, selectedSensor, setSelectedSensor } = useSensor()
   const { time, setTime } = useTimeLine()
   const [mapLoaded, setMapLoaded] = useState(false)
 
@@ -88,17 +88,17 @@ function App() {
   }, [time[0], mapLoaded])
 
   useEffect(() => {
-    if (!selectedLocation) return
+    if (!selectedSensor) return
 
     mapRef.current!.flyTo({
       center: [
-        selectedLocation.geometry.coordinates[0],
-        selectedLocation.geometry.coordinates[1],
+        selectedSensor.geometry.coordinates[0],
+        selectedSensor.geometry.coordinates[1],
       ],
       zoom: 13,
       duration: 1000,
     })
-  }, [selectedLocation])
+  }, [selectedSensor])
 
   return (
     <div className="flex absolute top-0 left-0 right-0 bottom-0 h-full w-full">
@@ -109,13 +109,13 @@ function App() {
       <div className="flex-1 relative">
         <div className="h-full w-full" ref={mapContainerRef} />
         {mapLoaded &&
-          locations.map((location) => (
+          sensors.map((sensor) => (
             <Marker
-              key={location.properties.name}
-              feature={location}
+              key={sensor.id}
+              feature={sensor}
               map={mapRef.current!}
-              setSelectedLocation={setSelectedLocation}
-              selectedLocation={selectedLocation}
+              setSelectedSensor={setSelectedSensor}
+              selectedSensor={selectedSensor}
             />
           ))}
         <Slider

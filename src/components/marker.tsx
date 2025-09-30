@@ -2,20 +2,20 @@ import { useEffect, useRef } from "react"
 import { createPortal } from "react-dom";
 import mapboxgl from 'mapbox-gl'
 
-import type { Location } from '@/data/location'
+import type { AnySensor } from '@/data/sensor'
 interface MarkerProps {
-  feature: Location
+  feature: AnySensor
   map: mapboxgl.Map
-  selectedLocation: Location | null
-  setSelectedLocation: Function
+  selectedSensor: AnySensor | null
+  setSelectedSensor: Function
 }
 
-const Marker = ({ map, feature ,selectedLocation,setSelectedLocation}: MarkerProps) => {
+const Marker = ({ map, feature ,selectedSensor,setSelectedSensor}: MarkerProps) => {
     const { geometry } = feature
 
     const contentRef = useRef(document.createElement("div"));
     const markerRef = useRef<mapboxgl.Marker | null>(null)
-    const isSelected = feature.properties.name === selectedLocation?.properties.name;
+    const isSelected = feature.id === selectedSensor?.id;
     useEffect(() => {
 
         markerRef.current = new mapboxgl.Marker(contentRef.current)
@@ -31,7 +31,7 @@ const Marker = ({ map, feature ,selectedLocation,setSelectedLocation}: MarkerPro
          <>
             {createPortal(
                 <div 
-                    onClick={() => setSelectedLocation(feature)}
+                    onClick={() => setSelectedSensor(feature)}
                     className={'bg-contain bg-no-repeat cursor-pointer transition w-[37px] h-[40px]'}
                     style={{
                         backgroundImage: (
