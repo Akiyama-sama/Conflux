@@ -10,17 +10,11 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as DemoTableRouteImport } from './routes/demo.table'
 import { Route as DemoStoreRouteImport } from './routes/demo.store'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DemoTableRoute = DemoTableRouteImport.update({
-  id: '/demo/table',
-  path: '/demo/table',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DemoStoreRoute = DemoStoreRouteImport.update({
@@ -32,31 +26,27 @@ const DemoStoreRoute = DemoStoreRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/demo/store': typeof DemoStoreRoute
-  '/demo/table': typeof DemoTableRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/demo/store': typeof DemoStoreRoute
-  '/demo/table': typeof DemoTableRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/demo/store': typeof DemoStoreRoute
-  '/demo/table': typeof DemoTableRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/demo/store' | '/demo/table'
+  fullPaths: '/' | '/demo/store'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/demo/store' | '/demo/table'
-  id: '__root__' | '/' | '/demo/store' | '/demo/table'
+  to: '/' | '/demo/store'
+  id: '__root__' | '/' | '/demo/store'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   DemoStoreRoute: typeof DemoStoreRoute
-  DemoTableRoute: typeof DemoTableRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -66,13 +56,6 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/demo/table': {
-      id: '/demo/table'
-      path: '/demo/table'
-      fullPath: '/demo/table'
-      preLoaderRoute: typeof DemoTableRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/demo/store': {
@@ -88,7 +71,6 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DemoStoreRoute: DemoStoreRoute,
-  DemoTableRoute: DemoTableRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

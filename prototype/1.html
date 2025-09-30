@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>洪鉴天枢 (Conflux) - 界面原型</title>
+    
+    <script src='https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js'></script>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css' rel='stylesheet' />
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: #1a1a1a;
+        }
+
+        #map {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 100%;
+        }
+
+        .header {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2;
+            background: linear-gradient(to bottom, rgba(20, 20, 20, 0.8), rgba(20, 20, 20, 0));
+            color: #fff;
+            text-align: center;
+            padding: 15px 50px;
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+            pointer-events: none;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+            letter-spacing: 2px;
+            text-shadow: 0 0 8px rgba(0, 191, 255, 0.8);
+        }
+        
+        .header p {
+            margin: 5px 0 0;
+            font-size: 14px;
+            opacity: 0.8;
+        }
+
+        .panel {
+            position: absolute;
+            z-index: 1;
+            background-color: rgba(35, 35, 35, 0.85);
+            color: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        #layer-control {
+            top: 20px;
+            right: 20px;
+            width: 200px;
+        }
+        
+        #layer-control h3 {
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            padding-bottom: 10px;
+        }
+
+        #layer-control label {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        #layer-control input[type="checkbox"] {
+            margin-right: 10px;
+            accent-color: #00BFFF;
+        }
+        
+        #timeline-control {
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60%;
+            max-width: 800px;
+            display: flex;
+            align-items: center;
+            padding: 10px 20px;
+        }
+        
+        #timeline-control .buttons {
+            display: flex;
+        }
+
+        #timeline-control button {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 5px 10px;
+            margin: 0 5px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        #timeline-control button:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        #timeline-slider {
+            flex-grow: 1;
+            margin: 0 15px;
+            cursor: pointer;
+        }
+        
+        #timeline-label {
+            min-width: 150px;
+            text-align: right;
+            font-size: 14px;
+            font-family: monospace;
+        }
+
+        /* Mapbox Popup Customization */
+        .mapboxgl-popup {
+            max-width: 250px;
+        }
+        .mapboxgl-popup-content {
+            background-color: rgba(35, 35, 35, 0.9) !important;
+            color: #fff !important;
+            padding: 15px !important;
+            border-radius: 8px !important;
+            font-size: 14px;
+        }
+        .mapboxgl-popup-content h4 {
+            margin: 0 0 10px;
+            font-size: 16px;
+            color: #00BFFF;
+        }
+        .mapboxgl-popup-content p {
+            margin: 5px 0;
+        }
+        .mapboxgl-popup-close-button {
+            color: #fff !important;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>洪鉴天枢 CONFLUX</h1>
+        <p>基于多模态云边协同的洪涝灾害智能预警系统</p>
+    </div>
+
+    <div id='map'></div>
+
+    <div id="layer-control" class="panel">
+        <h3>图层控制</h3>
+        <label>
+            <input type="checkbox" id="toggle-sensors-layer" checked>
+            感知网络层
+        </label>
+        <label>
+            <input type="checkbox" id="toggle-risk-zones-layer">
+            风险分析层
+        </label>
+        <label>
+            <input type="checkbox" id="toggle-inundation-layer" checked>
+            洪水淹没模拟
+        </label>
+    </div>
+
+    <div id="timeline-control" class="panel">
+        <div class="buttons">
+            <button id="play-pause-button">播放</button>
+            <button id="reset-button">重置</button>
+        </div>
+        <input id="timeline-slider" type="range" min="0" max="10" value="0" step="1">
+        <span id="timeline-label">预测时间: T+0 小时</span>
+    </div>
+
+    <script>
+        // 替换为您的 Mapbox Access Token
+        mapboxgl.accessToken = 'pk.eyJ1IjoiMjA5MTQzMzI4MSIsImEiOiJjbWc0bDZ3ODcwMDBnMm1uYWhycTl6NDRzIn0.r2Unbru-RSJOOfs94kofUg';
+
+        const map = new mapboxgl.Map({
+            container: 'map',
+            style: 'mapbox://styles/mapbox/dark-v11',
+            center: [114.3055, 30.5928], // 武汉
+            zoom: 11,
+            pitch: 45, // 倾斜视角
+            bearing: -17.6 // 旋转角度
+        });
+
+        // --- 模拟数据 ---
+        const sensorsData = {
+            'type': 'FeatureCollection',
+            'features': [
+                { 'type': 'Feature', 'geometry': { 'type': 'Point', 'coordinates': [114.3, 30.6] }, 'properties': { 'id': 'S001', 'type': '水位计', 'status': '正常' } },
+                { 'type': 'Feature', 'geometry': { 'type': 'Point', 'coordinates': [114.35, 30.58] }, 'properties': { 'id': 'S002', 'type': '雨量站', 'status': '正常' } },
+                { 'type': 'Feature', 'geometry': { 'type': 'Point', 'coordinates': [114.28, 30.55] }, 'properties': { 'id': 'S003', 'type': '水位计', 'status': '告警' } }
+            ]
+        };
+        const riskZonesData = {
+            'type': 'FeatureCollection',
+            'features': [
+                { 'type': 'Feature', 'geometry': { 'type': 'Polygon', 'coordinates': [[[114.25, 30.54], [114.27, 30.54], [114.27, 30.56], [114.25, 30.56], [114.25, 30.54]]] }, 'properties': { 'risk': '高风险' } }
+            ]
+        };
+        
+        // 模拟10个时间步的洪水淹没数据
+        const inundationDataByTime = Array.from({ length: 11 }, (_, i) => ({
+            'type': 'FeatureCollection',
+            'features': [
+                { 'type': 'Feature', 'geometry': { 'type': 'Polygon', 'coordinates': [[[114.31, 30.59], [114.33, 30.59], [114.33, 30.60 + i * 0.005], [114.31, 30.60 + i * 0.005], [114.31, 30.59]]] }, 'properties': { 'depth': i + 1 } }
+            ]
+        }));
+
+
+        let animationInterval = null;
+
+        map.on('load', () => {
+            // --- 添加数据源和图层 ---
+            map.addSource('sensors-source', { type: 'geojson', data: sensorsData });
+            map.addLayer({
+                id: 'sensors-layer',
+                type: 'circle',
+                source: 'sensors-source',
+                paint: {
+                    'circle-radius': 7,
+                    'circle-color': ['match', ['get', 'status'], '告警', '#FF4500', '#00BFFF'],
+                    'circle-stroke-width': 2,
+                    'circle-stroke-color': '#ffffff'
+                }
+            });
+
+            map.addSource('risk-zones-source', { type: 'geojson', data: riskZonesData });
+            map.addLayer({
+                id: 'risk-zones-layer',
+                type: 'fill',
+                source: 'risk-zones-source',
+                layout: { visibility: 'none' }, // 默认隐藏
+                paint: { 'fill-color': '#FF4500', 'fill-opacity': 0.4 }
+            });
+            
+            map.addSource('inundation-source', { type: 'geojson', data: inundationDataByTime[0] });
+            map.addLayer({
+                id: 'inundation-layer',
+                type: 'fill',
+                source: 'inundation-source',
+                paint: {
+                    'fill-color': '#007cbf',
+                    'fill-opacity': 0.6
+                }
+            });
+
+
+            // --- 交互逻辑 ---
+            const layerToggles = {
+                'toggle-sensors-layer': 'sensors-layer',
+                'toggle-risk-zones-layer': 'risk-zones-layer',
+                'toggle-inundation-layer': 'inundation-layer'
+            };
+
+            for (const [checkboxId, layerId] of Object.entries(layerToggles)) {
+                document.getElementById(checkboxId).addEventListener('change', (e) => {
+                    const visibility = e.target.checked ? 'visible' : 'none';
+                    map.setLayoutProperty(layerId, 'visibility', visibility);
+                });
+            }
+
+            // 传感器点击弹窗
+            map.on('click', 'sensors-layer', (e) => {
+                const properties = e.features[0].properties;
+                const coordinates = e.features[0].geometry.coordinates.slice();
+                
+                const content = `
+                    <h4>传感器信息</h4>
+                    <p><strong>ID:</strong> ${properties.id}</p>
+                    <p><strong>类型:</strong> ${properties.type}</p>
+                    <p><strong>状态:</strong> <span style="color:${properties.status === '告警' ? '#FF4500' : '#42f56f'}">${properties.status}</span></p>
+                `;
+                
+                new mapboxgl.Popup()
+                    .setLngLat(coordinates)
+                    .setHTML(content)
+                    .addTo(map);
+            });
+            
+            map.on('mouseenter', 'sensors-layer', () => { map.getCanvas().style.cursor = 'pointer'; });
+            map.on('mouseleave', 'sensors-layer', () => { map.getCanvas().style.cursor = ''; });
+
+
+            // 时间轴逻辑
+            const slider = document.getElementById('timeline-slider');
+            const label = document.getElementById('timeline-label');
+            const playPauseBtn = document.getElementById('play-pause-button');
+            const resetBtn = document.getElementById('reset-button');
+            
+            function updateMapForTime(timeStep) {
+                map.getSource('inundation-source').setData(inundationDataByTime[timeStep]);
+                label.textContent = `预测时间: T+${timeStep} 小时`;
+                slider.value = timeStep;
+            }
+
+            slider.addEventListener('input', (e) => {
+                updateMapForTime(parseInt(e.target.value, 10));
+            });
+
+            playPauseBtn.addEventListener('click', () => {
+                if (animationInterval) {
+                    clearInterval(animationInterval);
+                    animationInterval = null;
+                    playPauseBtn.textContent = '播放';
+                } else {
+                    playPauseBtn.textContent = '暂停';
+                    animationInterval = setInterval(() => {
+                        let currentStep = parseInt(slider.value, 10);
+                        let nextStep = (currentStep + 1) > slider.max ? 0 : currentStep + 1;
+                        updateMapForTime(nextStep);
+                    }, 1000); // 每秒更新一次
+                }
+            });
+            
+            resetBtn.addEventListener('click', () => {
+                if (animationInterval) {
+                    clearInterval(animationInterval);
+                    animationInterval = null;
+                    playPauseBtn.textContent = '播放';
+                }
+                updateMapForTime(0);
+            });
+        });
+    </script>
+
+</body>
+</html>
