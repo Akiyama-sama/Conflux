@@ -32,7 +32,7 @@ function App() {
     mapRef.current.on('load', () => {
       if (!mapRef.current) return
       setMapLoaded(true)
-       mapRef.current.addLayer({
+      mapRef.current.addLayer({
         id: 'collisions',
         type: 'circle',
         source: {
@@ -68,14 +68,8 @@ function App() {
           ],
           'circle-opacity': 0.8,
         },
-      }) 
-       
-    
-    
       })
-
-    
-
+    })
 
     return () => {
       mapRef.current?.remove()
@@ -109,7 +103,7 @@ function App() {
   return (
     <div className="flex absolute top-0 left-0 right-0 bottom-0 h-full w-full">
       {/* Sidebar placeholder */}
-      <Sidebar/>
+      <Sidebar />
 
       {/* Map container */}
       <div className="flex-1 relative">
