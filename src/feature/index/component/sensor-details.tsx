@@ -45,12 +45,12 @@ const DataItem = ({ icon, label, value, unit = '', warning = false, danger = fal
     "flex items-center gap-2 p-2 rounded-lg",
     warning ? "bg-sidebar-ring/5 border border-sidebar-ring/10" : null,
     danger ? "bg-destructive/5 border border-destructive/10" : null,
-    !warning && !danger ? "bg-muted/30" : null
+    !warning && !danger ? "bg-muted/80 shadow-xs" : null
   )}>
     {icon && <div className={cn(
       "flex items-center justify-center w-8 h-8 rounded-md",
       warning ? "text-sidebar-ring bg-sidebar-ring/10" : null,
-      danger ? "text-destructive bg-destructive/10" : null,
+      danger ? "text-accent bg-destructive/10" : null,
       !warning && !danger ? "text-muted-foreground bg-muted/50" : null
     )}>
       {icon}
@@ -60,7 +60,7 @@ const DataItem = ({ icon, label, value, unit = '', warning = false, danger = fal
       <div className={cn(
         "font-medium",
         warning ? "text-ring" : null,
-        danger ? "text-destructive" : null
+        danger ? "text-accent" : null
       )}>
         {value} {unit}
       </div>

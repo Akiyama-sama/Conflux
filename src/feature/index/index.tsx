@@ -5,16 +5,19 @@ import 'mapbox-gl/dist/mapbox-gl.css'
 
 import Marker from '@/components/marker'
 import Sidebar from '@/feature/index/component/sidebar'
-import useSensor from '@/feature/index/store/sensor-store'
+import useSensor from '@/hooks/sensor-store'
 import { Slider } from '@/components/ui/slider'
-import useTimeLine from './store/timeLine-store'
+import useTimeLine from '../../hooks/timeLine-store'
+import showDangerToast from './component/danger-toast'
+import { timeToastData } from './data/time-toast-data'
+import { useNavigate } from '@tanstack/react-router'
 function App() {
   const mapRef = useRef<mapboxgl.Map | null>(null)
   const mapContainerRef = useRef<HTMLDivElement>(null)
   const { sensors, selectedSensor, setSelectedSensor } = useSensor()
   const { time, setTime } = useTimeLine()
   const [mapLoaded, setMapLoaded] = useState(false)
-
+  const navigate = useNavigate()
   useEffect(() => {
     // Set your Mapbox access token
     mapboxgl.accessToken =
@@ -77,6 +80,7 @@ function App() {
   }, [])
 
   useEffect(() => {
+    //给地图添加带有时间轴的图层
     if (!mapRef.current || !mapLoaded) return
     if (mapRef.current.getLayer('collisions')) {
       mapRef.current.setFilter('collisions', [
@@ -84,6 +88,12 @@ function App() {
         ['number', ['get', 'Hour']],
         time[0],
       ])
+    }
+    const timeToast = timeToastData.find(item => item.timeLine[0] === time[0])
+    if(timeToast){
+      const focusSensor = sensors.find(item => item.geometry.coordinates[0] === timeToast?.location[0] && item.geometry.coordinates[1] === timeToast?.location[1])
+      focusSensor && setSelectedSensor(focusSensor)
+      showDangerToast({ timeLine: time, message: timeToast?.message || "", onClick: () => navigate({ to: "/notification" }) })
     }
   }, [time[0], mapLoaded])
 
@@ -129,6 +139,7 @@ function App() {
           className="absolute w-[50%] bottom-20 left-1/2  -translate-x-1/2"
         />
       </div>
+      
     </div>
   )
 }
