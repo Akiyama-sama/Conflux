@@ -1,7 +1,7 @@
 
 import { Combobox } from './combobox'
 import { Separator } from "@/components/ui/separator"
-import useSensor from '../../../hooks/sensor-store'
+import useSensor from '@/hooks/sensor-store'
 import SensorDetails from './sensor-details'
 
 

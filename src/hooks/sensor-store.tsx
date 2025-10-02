@@ -1,5 +1,5 @@
 import type { AnySensor } from '@/data/sensor'
-import {sensorData} from '@/feature/index/data/sensor-data'
+import {sensorMonkData} from '@/feature/index/data/sensor-monk-data'
 import {create} from 'zustand'
 
 interface SensorState {
@@ -10,7 +10,7 @@ interface SensorState {
 }
 
 const useSensor = create<SensorState>((set) => ({
-  sensors: sensorData,
+  sensors: sensorMonkData,
   selectedSensor:null,
   setSensors: (sensors) => set({ sensors }),
   setSelectedSensor:(sensor)=>set({ selectedSensor: sensor })

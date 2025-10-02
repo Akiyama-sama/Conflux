@@ -26,8 +26,8 @@ function App() {
     mapRef.current = new mapboxgl.Map({
       container: mapContainerRef.current!,
       // style:'mapbox://styles/mapbox/light-v11',
-      center: [-74.0059, 40.7128] /*  [ 119.202876,26.034701], */, // fujian university
-      zoom: 12.5,
+      center: [ 119.202876,26.034701], // fujian university
+      zoom: 8.5,
       config: {
         basemap: { theme: 'faded' },
       },
@@ -36,26 +36,32 @@ function App() {
       if (!mapRef.current) return
       setMapLoaded(true)
       mapRef.current.addLayer({
-        id: 'collisions',
+        id: 'fujian',
         type: 'circle',
         source: {
           type: 'geojson',
-          data: './src/feature/index/data/collisions1601.geojson', // replace this with the url of your own geojson
+          data: './src/feature/index/data/fuzhou-flood-risk-12-random-hours.geojson', // replace this with the url of your own geojson
         },
         paint: {
           'circle-radius': [
             'interpolate',
             ['linear'],
-            ['number', ['get', 'Casualty']],
-            0,
+            ['number', ['get', 'Level']],
+            1,
+            6,
+            2,
+            10,
+            3,
+            15,
             4,
+            20,
             5,
-            24,
+            25,
           ],
           'circle-color': [
             'interpolate',
             ['linear'],
-            ['number', ['get', 'Casualty']],
+            ['number', ['get', 'Level']],
             0,
             '#2DC4B2',
             1,
@@ -69,7 +75,7 @@ function App() {
             5,
             '#AA5E79',
           ],
-          'circle-opacity': 0.8,
+          'circle-opacity': 0.7,
         },
       })
     })
@@ -82,8 +88,8 @@ function App() {
   useEffect(() => {
     //给地图添加带有时间轴的图层
     if (!mapRef.current || !mapLoaded) return
-    if (mapRef.current.getLayer('collisions')) {
-      mapRef.current.setFilter('collisions', [
+    if (mapRef.current.getLayer('fujian')) {
+      mapRef.current.setFilter('fujian', [
         '==',
         ['number', ['get', 'Hour']],
         time[0],
@@ -98,6 +104,7 @@ function App() {
   }, [time[0], mapLoaded])
 
   useEffect(() => {
+    //跳转到指定Sensor的坐标
     if (!selectedSensor) return
 
     mapRef.current!.flyTo({
@@ -105,7 +112,7 @@ function App() {
         selectedSensor.geometry.coordinates[0],
         selectedSensor.geometry.coordinates[1],
       ],
-      zoom: 13,
+      zoom: 10.5,
       duration: 1000,
     })
   }, [selectedSensor])

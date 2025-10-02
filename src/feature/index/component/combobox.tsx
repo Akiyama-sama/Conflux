@@ -20,7 +20,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 
-import useSensor from "../../../hooks/sensor-store"
+import useSensor from "@/hooks/sensor-store"
 import { SensorStatus } from "@/data/sensor"
 
 export function Combobox() {
