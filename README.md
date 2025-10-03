@@ -2,7 +2,7 @@
 
 这是一个AI+暴雨防涝的智能化平台，目前只是一个纯前端实现
 主要技术栈：
-- React+Vite+TypeScript 实现类型安全，复杂度可控的迅捷开发
+- React+Vite+TypeScript 实现类型安全，复杂度可控的迅捷前端开发
 - TanStack Router 实现文件路由
 - Zustand 负责状态管理
 - MapBox GL 实现的地图加载与图层管理
@@ -10,10 +10,12 @@
 
 # 项目演示
 
-[项目演示0](public\short-cut0.png)
-[项目演示1](public\short-cut1.png)
-[项目演示2](public\short-cut2.png)
-[项目演示3](public\short-cut3.png)
+![](https://github.com/Akiyama-sama/Conflux/blob/2cf20a0aa035cc1c6af0d38646950b2e0526bdf3/public/short-cut0.png?raw=true)
+![](https://github.com/Akiyama-sama/Conflux/blob/2cf20a0aa035cc1c6af0d38646950b2e0526bdf3/public/short-cut1.png?raw=true)
+![](https://github.com/Akiyama-sama/Conflux/blob/2cf20a0aa035cc1c6af0d38646950b2e0526bdf3/public/short-cut2.png?raw=true)
+![](https://github.com/Akiyama-sama/Conflux/blob/2cf20a0aa035cc1c6af0d38646950b2e0526bdf3/public/short-cut3.png?raw=true)
+
+
 
 # 部署项目
 
