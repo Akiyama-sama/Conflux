@@ -3,7 +3,7 @@ import path from 'path';
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
 // --- 配置区域 ---
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY || 'AIzaSyCaYnSuM_PrOr7Tk22RLAlLNh2gSiSbcQQ';
+const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY || '';
 const MODEL_NAME = "gemini-2.5-flash";
 
 // --- 路径和文件 ---

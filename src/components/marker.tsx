@@ -37,7 +37,7 @@ const Marker = ({
         <div
           onClick={() => setSelectedSensor(feature)}
           className={`${isSelected ? 'bg-primary text-background hover:bg-primary' : 
-            (status != SensorStatus.WARNING) ? 'bg-background hover:bg-secondary shadow-md' : 'bg-destructive hover:bg-destructive' } 
+             'bg-background hover:bg-secondary shadow-md'  } 
             
             rounded-full p-2  border-2 border-ring/50    bg-contain bg-no-repeat cursor-pointer transition w-[37px] h-[40px]`}
         >

@@ -6,14 +6,19 @@ import 'mapbox-gl/dist/mapbox-gl.css'
 import Marker from '@/components/marker'
 import Sidebar from '@/feature/index/component/sidebar'
 import useSensor from '@/hooks/sensor-store'
-import { Slider } from '@/components/ui/slider'
+
 import useTimeLine from '../../hooks/timeLine-store'
 import showDangerToast from './component/danger-toast'
 import { timeToastData } from './data/time-toast-data'
 import { useNavigate } from '@tanstack/react-router'
 import useCircle from '@/hooks/circle-store'
 import HoverBlock from './component/hover-block'
+import { HoverSlider } from './component/hover-slider'
+
+const MAPBOX_ACCESS_TOKEN = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN
+
 function App() {
+  
   const mapRef = useRef<mapboxgl.Map | null>(null)
   const mapContainerRef = useRef<HTMLDivElement>(null)
   const { sensors, selectedSensor, setSelectedSensor } = useSensor()
@@ -24,13 +29,13 @@ function App() {
   useEffect(() => {
     // Set your Mapbox access token
     mapboxgl.accessToken =
-      'pk.eyJ1IjoiMjA5MTQzMzI4MSIsImEiOiJjbWc0a3hlOTgxazY3MmxvaXo1OW9nam1vIn0.qetux1BMTZnSoVIR9Q47qQ'
+      MAPBOX_ACCESS_TOKEN
 
     mapRef.current = new mapboxgl.Map({
       container: mapContainerRef.current!,
       // style:'mapbox://styles/mapbox/light-v11',
       center: [ 119.202876,26.034701], // fujian university
-      zoom: 8,
+      zoom: 8.8,
       config: {
         basemap: { theme: 'faded' },
       },
@@ -162,7 +167,7 @@ function App() {
               selectedSensor={selectedSensor}
             />
           ))}
-        <Slider
+        <HoverSlider
           defaultValue={[0]}
           value={time}
           onValueChange={(t) => {

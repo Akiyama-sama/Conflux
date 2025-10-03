@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { showSubmittedData } from '@/lib/show-data'
+import { showSubmittedData, showSuccessMessage } from '@/lib/show-data'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Textarea } from '@/components/ui/textarea'
@@ -72,7 +72,7 @@ export default function Notification() {
       timestamp: new Date().toISOString(),
     }
     
-    showSubmittedData(submittedData, '通知已提交，包含以下信息：')
+    showSuccessMessage('通知已提交')
     
     // 重置表单
     setRecipients([])

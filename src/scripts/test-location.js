@@ -5,7 +5,7 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 // --- 配置区域 ---
 // 从环境变量或直接在此处设置您的 Gemini API 密钥
 // 强烈建议使用环境变量来保护您的密钥
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY || 'AIzaSyCaYnSuM_PrOr7Tk22RLAlLNh2gSiSbcQQ';
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY || '';
 
 // 使用的模型。请根据您的需求选择，例如 "gemini-1.5-flash" 或 "gemini-pro"
 // 注意：JSON 模式需要使用 gemini-1.5-pro-latest, gemini-1.5-flash-latest, gemini-1.0-pro

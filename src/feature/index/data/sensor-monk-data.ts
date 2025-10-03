@@ -166,7 +166,7 @@ export const sensorMonkData: AnySensor[] = Array.from({ length: coordinatesPool.
 
       return {
         id: crypto.randomUUID(),
-        name: `Monk HydroVantage ${3000 + index}`,
+        name: `HydroVantage ${3000 + index}`,
         type: SensorType.WaterLevel,
         geometry: { type: "Point", coordinates: [lng, lat] },
         status,
@@ -189,7 +189,7 @@ export const sensorMonkData: AnySensor[] = Array.from({ length: coordinatesPool.
       const currentIntensity = historicalData[historicalData.length - 1].intensity;
       return {
         id: crypto.randomUUID(),
-        name: `Monk RainGauge Pro ${500 + index}`,
+        name: `RainGauge Pro ${500 + index}`,
         type: SensorType.Rainfall,
         geometry: { type: "Point", coordinates: [lng, lat] },
         status,
@@ -202,8 +202,8 @@ export const sensorMonkData: AnySensor[] = Array.from({ length: coordinatesPool.
       } as AnySensor;
     }
 
-    // AICameraSensor
-    case 2: {
+    // AICameraSensor 弃用，没有图片
+    /* case 2: {
       const riskLevels: ("无积水" | "轻度积水" | "严重拥堵" | "道路中断")[] = [
         "无积水",
         "轻度积水",
@@ -218,7 +218,7 @@ export const sensorMonkData: AnySensor[] = Array.from({ length: coordinatesPool.
 
       return {
         id: crypto.randomUUID(),
-        name: `Monk StreetEye AI-${800 + index}`,
+        name: `StreetEye AI-${800 + index}`,
         type: SensorType.AICamera,
         geometry: { type: "Point", coordinates: [lng, lat] },
         status: riskLevel === "道路中断" ? SensorStatus.ERROR : status,
@@ -229,14 +229,14 @@ export const sensorMonkData: AnySensor[] = Array.from({ length: coordinatesPool.
         latestImageUrl: `https://picsum.photos/seed/monk-${index}/400/300`,
         videoStreamUrl: `https://example.com/stream/monk-${index}`,
       } as AnySensor;
-    }
+    } */
 
     // WeatherStationSensor
     case 3:
     default: {
       return {
         id: crypto.randomUUID(),
-        name: `Monk WeatherMaster ${900 + index}`,
+        name: `WeatherMaster ${900 + index}`,
         type: SensorType.WeatherStation,
         geometry: { type: "Point", coordinates: [lng, lat] },
         status,

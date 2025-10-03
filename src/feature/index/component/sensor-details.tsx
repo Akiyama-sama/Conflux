@@ -359,7 +359,7 @@ const SensorDetails = ({ sensor }: { sensor: AnySensor }) => {
       
       <div className="space-y-4">
         {renderSensorSpecificDetails()}
-        <div className="flex items-center justify-between text-xs text-muted-foreground mt-4 pt-2 border-t border-border/30">
+        <div className="flex items-center justify-between font-serif text-xs text-muted-foreground mt-4 pt-2 border-t border-border/30">
           <div className="flex items-center gap-1">
             <Timer className="h-3 w-3" />
             <span>UPDATED AT: {new Date(sensor.lastUpdated).toLocaleString()}</span>
