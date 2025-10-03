@@ -6,6 +6,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Label } from '@/components/ui/label'
 import { apps } from './data/apps'
+import Header from '@/components/Header'
 
 type NotificationForm = {
   recipients: string[]
@@ -86,6 +87,8 @@ export default function Notification() {
   }
 
   return (
+    <>
+    <Header />
     <div className="flex flex-col gap-6 items-center max-w-4xl mx-auto p-6">
       <Card className="w-full">
         <CardHeader>
@@ -176,5 +179,8 @@ export default function Notification() {
         </CardContent>
       </Card>
     </div>
+    </>
+    
+    
   )
 }

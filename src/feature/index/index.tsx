@@ -11,11 +11,14 @@ import useTimeLine from '../../hooks/timeLine-store'
 import showDangerToast from './component/danger-toast'
 import { timeToastData } from './data/time-toast-data'
 import { useNavigate } from '@tanstack/react-router'
+import useCircle from '@/hooks/circle-store'
+import HoverBlock from './component/hover-block'
 function App() {
   const mapRef = useRef<mapboxgl.Map | null>(null)
   const mapContainerRef = useRef<HTMLDivElement>(null)
   const { sensors, selectedSensor, setSelectedSensor } = useSensor()
   const { time, setTime } = useTimeLine()
+  const {  setCircle } = useCircle()
   const [mapLoaded, setMapLoaded] = useState(false)
   const navigate = useNavigate()
   useEffect(() => {
@@ -27,7 +30,7 @@ function App() {
       container: mapContainerRef.current!,
       // style:'mapbox://styles/mapbox/light-v11',
       center: [ 119.202876,26.034701], // fujian university
-      zoom: 8.5,
+      zoom: 8,
       config: {
         basemap: { theme: 'faded' },
       },
@@ -35,6 +38,7 @@ function App() {
     mapRef.current.on('load', () => {
       if (!mapRef.current) return
       setMapLoaded(true)
+
       mapRef.current.addLayer({
         id: 'fujian',
         type: 'circle',
@@ -63,23 +67,47 @@ function App() {
             ['linear'],
             ['number', ['get', 'Level']],
             0,
-            '#2DC4B2',
+            '#94a3b8',
             1,
-            '#3BB3C3',
+            '#7dd3fc',
             2,
             '#669EC4',
             3,
-            '#8B88B6',
+            '#0c4a6e',
             4,
-            '#A2719B',
+            '#fb923c',
             5,
-            '#AA5E79',
+            '#f87171',
           ],
-          'circle-opacity': 0.7,
+          'circle-opacity': 0.75,
         },
       })
     })
+    //鼠标悬停时拿到对应的geojson数据
+    mapRef.current.on('mousemove', 'fujian', (e) => {
+      if (!mapRef.current) return
+      if (e.features && e.features.length > 0) {
+        mapRef.current.getCanvas().style.cursor = 'pointer'
+        const feature = e.features[0]
+        if (feature.geometry && feature.geometry.type === 'Point') {
+          const coordinates = (feature.geometry as GeoJSON.Point).coordinates.slice()
+          setCircle({
+            level: feature.properties?.Level,
+            hour: feature.properties?.Hour,
+            depth: feature.properties?.Depth,
+            population: feature.properties?.Population,
+            property: feature.properties?.Property,
+            coordinates: coordinates as [number, number],
+          })
+        }
+      }
+    })
 
+    mapRef.current.on('mouseleave', 'fujian', () => {
+      if (!mapRef.current) return
+      setCircle(null)
+      mapRef.current.getCanvas().style.cursor = ''
+    })
     return () => {
       mapRef.current?.remove()
     }
@@ -104,7 +132,6 @@ function App() {
   }, [time[0], mapLoaded])
 
   useEffect(() => {
-    //跳转到指定Sensor的坐标
     if (!selectedSensor) return
 
     mapRef.current!.flyTo({
@@ -112,7 +139,7 @@ function App() {
         selectedSensor.geometry.coordinates[0],
         selectedSensor.geometry.coordinates[1],
       ],
-      zoom: 10.5,
+      zoom: 9.8,
       duration: 1000,
     })
   }, [selectedSensor])
@@ -145,6 +172,7 @@ function App() {
           step={1}
           className="absolute w-[50%] bottom-20 left-1/2  -translate-x-1/2"
         />
+        <HoverBlock/>
       </div>
       
     </div>
