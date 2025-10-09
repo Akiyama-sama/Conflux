@@ -24,7 +24,7 @@ const Sidebar = () => {
           )}
         </div>
       </div> */}
-      <div className="chatbot-container w-full h-full">
+      <div className="chatbot-container w-full h-full flex max-w-full">
         <Chatbot />
       </div>
     </div>

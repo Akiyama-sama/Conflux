@@ -6,6 +6,7 @@ import React, {
   useRef,
   useEffect,
   useCallback,
+  useState,
 } from "react";
 import { toast } from "sonner";
 
@@ -28,59 +29,63 @@ const suggestedActions = [
 ];
 
 export function MultimodalInput({
-  input,
-  setInput,
   isLoading,
   stop,
   messages,
-  append,
-  handleSubmit,
+  sendMessage,
 }: {
-  input: string;
-  setInput: (value: string) => void;
   isLoading: boolean;
   stop: () => void;
   messages: Array<UIMessage>;
-  append: (
+  sendMessage: (
     message: UIMessage | CreateUIMessage<UIMessage>,
     chatRequestOptions?: ChatRequestOptions,
   ) => Promise<void>;
-  handleSubmit: (
+  /* handleSubmit: (
     event?: {
       preventDefault?: () => void;
     },
     chatRequestOptions?: ChatRequestOptions,
-  ) => void;
+  ) => void; */
 }) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const { width } = useWindowSize();
+  const [input, setInput] = useState("");
 
-  useEffect(() => {
+/*   useEffect(() => {
     if (textareaRef.current) {
       adjustHeight();
     }
-  }, []);
+  }, []); */
 
-  const adjustHeight = () => {
+/*   const adjustHeight = () => {
     if (textareaRef.current) {
       textareaRef.current.style.height = "auto";
       textareaRef.current.style.height = `${textareaRef.current.scrollHeight + 0}px`;
     }
-  };
+  }; */
 
   const handleInput = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setInput(event.target.value);
-    adjustHeight();
   };
 
   ;
 
   const submitForm = useCallback(() => {
-
+    sendMessage({
+      role: "user",
+      parts: [
+        {
+          type: "text",
+          text: input,
+        },
+      ],
+    });
     if (width && width > 768) {
       textareaRef.current?.focus();
     }
-  }, [ handleSubmit,,width]);
+    setInput("");
+  }, [width, sendMessage, input]);
 
 
   return (
@@ -99,7 +104,7 @@ export function MultimodalInput({
               >
                 <button
                   onClick={async () => {
-                    append({
+                    sendMessage({
                       role: "user",
                       parts: [
                         {
@@ -127,11 +132,10 @@ export function MultimodalInput({
         placeholder="给AI助手发送消息..."
         value={input}
         onChange={handleInput}
-        className="min-h-[50px] overflow-hidden w-full max-w-full rounded-md text-base bg-muted border-1 border-border shadow-md  border-none"
+        className="min-h-[55px] overflow-hidden w-full max-w-full rounded-md text-base bg-muted border-1 border-border shadow-md  border-none"
         onKeyDown={(event) => {
           if (event.key === "Enter" && !event.shiftKey) {
             event.preventDefault();
-
             if (isLoading) {
               toast.error("Please wait for the model to finish its response!");
             } else {
