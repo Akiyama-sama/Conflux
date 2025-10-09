@@ -1,8 +1,7 @@
 "use client";
 
 import {  type UIMessage } from "@ai-sdk/react";
-import { useChat } from "@ai-sdk/react";
-import { useState } from "react";
+import { useChat } from "@/hooks/use-chat";
 
 import { Message as PreviewMessage } from "./message";
 import { useScrollToBottom } from "./use-scroll-to-bottom";
@@ -16,9 +15,11 @@ export function Chat({
   id: string;
   initialMessages: Array<UIMessage>;
 }) {
+  
   const { messages, sendMessage, status, stop } =
     useChat({
       id,
+      initialMessages,
     });
 
 
@@ -56,6 +57,7 @@ export function Chat({
             stop={stop}
             messages={messages}
             sendMessage={sendMessage}
+            // handleSubmit={handleSubmit} // If you need this, you'll need to re-implement it
           />
         </form>
       </div>
