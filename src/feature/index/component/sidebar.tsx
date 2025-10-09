@@ -3,13 +3,28 @@ import { Separator } from '@/components/ui/separator'
 import useSensor from '@/hooks/sensor-store'
 import SensorDetails from './sensor-details'
 import Chatbot from './chatbot/chatbot'
+import { useSideBar } from '@/hooks/sidebar-store'
 
 const Sidebar = () => {
   const { selectedSensor } = useSensor()
+  const {sideBar,setSideBar}= useSideBar()
+
 
   return (
+    
     <div className="w-1/4 h-full bg-background shadow-lg border-l border-sidebar-border flex flex-col overflow-hidden">
-      {/* <div className="sensor-container">
+      <div className='sidebar-router w-full flex h-5 items-center justify-center space-x-4 text-sm pt-2 ' >
+        <div className='hover:cursor-pointer'
+        onClick={()=>setSideBar('sensor')}
+        >传感器详情</div>
+        <Separator orientation='vertical' className='border-1'/>
+        <div className='hover:cursor-pointer'
+        onClick={()=>setSideBar('chatbot')}
+        >Conflux智能体</div>
+      </div>
+      {
+        sideBar == 'sensor'?(
+<div className="sensor-container">
         <div className="p-5">
           <Combobox />
         </div>
@@ -23,10 +38,15 @@ const Sidebar = () => {
             </div>
           )}
         </div>
-      </div> */}
-      <div className="chatbot-container w-full h-full flex max-w-full">
+      </div> 
+        ):(
+          <div className="chatbot-container w-full h-full flex max-w-full">
         <Chatbot />
       </div>
+        )
+      }
+     
+      
     </div>
   )
 }
