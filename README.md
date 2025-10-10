@@ -10,6 +10,9 @@
 
 # 项目演示
 
+
+https://github.com/user-attachments/assets/f3fba205-cf8b-4f0a-9feb-764e52e6f984
+
 ![](https://github.com/Akiyama-sama/Conflux/blob/2cf20a0aa035cc1c6af0d38646950b2e0526bdf3/public/short-cut0.png?raw=true)
 ![](https://github.com/Akiyama-sama/Conflux/blob/2cf20a0aa035cc1c6af0d38646950b2e0526bdf3/public/short-cut1.png?raw=true)
 ![](https://github.com/Akiyama-sama/Conflux/blob/2cf20a0aa035cc1c6af0d38646950b2e0526bdf3/public/short-cut2.png?raw=true)
