@@ -14,6 +14,8 @@ import { useNavigate } from '@tanstack/react-router'
 import useCircle from '@/hooks/circle-store'
 import HoverBlock from './component/hover-block'
 import { HoverSlider } from './component/hover-slider'
+import { useSideBar } from '@/hooks/sidebar-store'
+import { useChat } from '@/hooks/use-chat'
 
 const MAPBOX_ACCESS_TOKEN = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN
 
@@ -21,10 +23,12 @@ function App() {
   
   const mapRef = useRef<mapboxgl.Map | null>(null)
   const mapContainerRef = useRef<HTMLDivElement>(null)
+  const {sendMessage}=useChat({})
   const { sensors, selectedSensor, setSelectedSensor } = useSensor()
   const { time, setTime } = useTimeLine()
   const {  setCircle } = useCircle()
   const [mapLoaded, setMapLoaded] = useState(false)
+  const { setSideBar}=useSideBar()
   const navigate = useNavigate()
   useEffect(() => {
     // Set your Mapbox access token
@@ -132,7 +136,23 @@ function App() {
     if(timeToast){
       const focusSensor = sensors.find(item => item.geometry.coordinates[0] === timeToast?.location[0] && item.geometry.coordinates[1] === timeToast?.location[1])
       focusSensor && setSelectedSensor(focusSensor)
-      showDangerToast({ timeLine: time, message: timeToast?.message || "", onClick: () => navigate({ to: "/notification" }) })
+      showDangerToast({ timeLine: time, message: timeToast?.message || "", onClickNavigate: () => navigate({ to: "/notification" }),onClickAgent:()=>{
+        setSideBar('chatbot')
+        console.log('0')
+        if(timeToast.agentMessage){
+          setTimeout(()=>{
+            sendMessage({
+              role: "user",
+              parts: [
+                {
+                  type: "text",
+                  text: timeToast.agentMessage,
+                },
+              ],
+            })
+          },500)
+        }
+      } })
     }
   }, [time[0], mapLoaded])
 

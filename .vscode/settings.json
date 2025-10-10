@@ -10,4 +10,6 @@
   },
   "vim.autoSwitchInputMethod.enable": true,
   "vim.autoSwitchInputMethod.defaultIM": "0",
+  "editor.fontFamily": "Fira Code,Consolas, 'Courier New', monospace",
+  "editor.fontSize": 16,
 }

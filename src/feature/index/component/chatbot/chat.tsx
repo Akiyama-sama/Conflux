@@ -7,6 +7,7 @@ import { Message as PreviewMessage } from "./message";
 import { useScrollToBottom } from "./use-scroll-to-bottom";
 
 import { MultimodalInput } from "./multimodal-input";
+import { useState } from "react";
 
 export function Chat({
   id,
@@ -17,14 +18,12 @@ export function Chat({
 }) {
   
   const { messages, sendMessage, status, stop } =
-    useChat({
-      id,
-      initialMessages,
-    });
+    useChat({});
 
 
   const [messagesContainerRef, messagesEndRef] =
     useScrollToBottom<HTMLDivElement>();
+
   
 
   return (

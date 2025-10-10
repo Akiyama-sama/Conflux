@@ -3,16 +3,18 @@ interface TimeToastData {
     timeLine: number[]
     message: string
     location:[number,number]
+    agentMessage:string
 }
 
 export const timeToastData: TimeToastData[] = [
     {
         timeLine: [1],
-        message: "模型监测到福州大学城区域上空对流有效位能(CAPE)急剧增强，预计1小时内将发生极端强降雨。AI推演的淹没分析显示多个低洼地区存在严重风险，请通知大学城的学生以及市民们做好防汛准备",
+        message: "未来1小时，闽江下游流域降雨量将急剧增加，洪峰预计在2小时后到达福州市区。主要风险点位于福州大学城低洼地带，请重点关注",
         location: [
           119.202429,
           26.065866
-        ]
+        ],
+        agentMessage:'多个监测点水位已触发红色预警，综合风险评估为“极高”。请根据《福州市防汛应急预案》生成决策建议。'
     },
     {
         timeLine: [10],
@@ -20,7 +22,9 @@ export const timeToastData: TimeToastData[] = [
         location: [
           119.625176,
           25.973658
-        ]
+        ],
+        agentMessage:'立即向所有一线防汛人员和长乐的社区网格员发送暴雨预警和紧急撤离通知'
+
     },
     {
         timeLine: [14],
@@ -28,6 +32,7 @@ export const timeToastData: TimeToastData[] = [
         location: [
           119.330307,
           25.726755
-        ]
+        ],
+        agentMessage:'立即向所有一线防汛人员和福清的社区网格员发送暴雨预警和紧急撤离通知'
     }
 ]

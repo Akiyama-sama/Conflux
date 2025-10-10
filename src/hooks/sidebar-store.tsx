@@ -1,10 +1,12 @@
-import { useState } from "react";
-type SideBar='sensor'| 'chatbot'
+import { create } from 'zustand';
+type SideBar = 'sensor' | 'chatbot';
 
-export const useSideBar=()=>{
-   const[sideBar,setSideBar] =useState<SideBar>('sensor')
-   return {
-    sideBar,
-    setSideBar
-   }
+interface SideBarState {
+  sideBar: SideBar;
+  setSideBar: (newSideBar: SideBar) => void;
 }
+
+export const useSideBar = create<SideBarState>((set) => ({
+  sideBar: 'sensor',
+  setSideBar: (newSideBar) => set({ sideBar: newSideBar }),
+}));

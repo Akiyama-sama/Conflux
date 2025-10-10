@@ -13,7 +13,7 @@ const Sidebar = () => {
   return (
     
     <div className="w-1/4 h-full bg-background shadow-lg border-l border-sidebar-border flex flex-col overflow-hidden">
-      <div className='sidebar-router w-full flex h-5 items-center justify-center space-x-4 text-sm pt-2 ' >
+      <div className='sidebar-router w-full flex h-6 justify-center space-x-4 text-sm pt-2 ' >
         <div className='hover:cursor-pointer'
         onClick={()=>setSideBar('sensor')}
         >传感器详情</div>

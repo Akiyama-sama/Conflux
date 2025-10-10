@@ -7,7 +7,7 @@ export const Route = createRootRoute({
     <>
       
       <Outlet />
-      <Toaster />
+      <Toaster visibleToasts={2} expand={true}/>
     </>
   ),
 })
