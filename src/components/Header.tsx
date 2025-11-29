@@ -10,7 +10,7 @@ export default function Header() {
           </Link>
         </div>
       </nav>
-      <div className='text-2xl font-bold text-center w-full'> 洪鉴天枢 (Conflux) 数据通知平台 </div>
+      <div className='text-2xl font-bold text-center w-full'> 禹鉴天枢 (Conflux) 数据通知平台 </div>
     </header>
   )
 }

@@ -4,13 +4,15 @@ import mapboxgl from 'mapbox-gl'
 import 'mapbox-gl/dist/mapbox-gl.css'
 import './App.css'
 
+const accessKey = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN
+
 function App() {
   const mapRef = useRef<mapboxgl.Map | null>(null)
   const mapContainerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     // Set your Mapbox access token
-    mapboxgl.accessToken = 'pk.eyJ1IjoiMjA5MTQzMzI4MSIsImEiOiJjbWc0a3hlOTgxazY3MmxvaXo1OW9nam1vIn0.qetux1BMTZnSoVIR9Q47qQ'
+    mapboxgl.accessToken = accessKey
     
     mapRef.current = new mapboxgl.Map({
       container: mapContainerRef.current!, 
